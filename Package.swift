@@ -20,7 +20,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/antoniopantaleo/didi.git",
-            branch: "develop"
+            from: "1.0.0"
         ),
         .package(
             url: "https://github.com/hmlongco/Factory.git",
