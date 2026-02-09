@@ -27,8 +27,7 @@ public final class FactoryContainer: Didi.Container {
     /// - Parameter component: A closure producing the registration to store.
     public func register<P>(_ component: () -> Registration<P>) where P: Sendable {
         let registration = component()
-        let instance = registration.factory()
-        _ = container.register(registration.type) { instance }
+        _ = container.register(registration.type, factory: registration.factory)
     }
     
     /// Resolves a service from the underlying Factory container, translating missing services into `ResolutionError`.
