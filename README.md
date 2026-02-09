@@ -19,7 +19,7 @@ Add `didi` to your dependencies:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/antoniopantaleo/didi-factory.git", from: "1.0.0")
+    .package(url: "https://github.com/antoniopantaleo/didi-factory.git", from: "2.0.0")
 ]
 ```
 
@@ -48,11 +48,18 @@ import DidiFactory
 let container = FactoryContainer()
 
 container.register {
-    HTTPClient.self ~> URLSessionHTTPClient(session: .shared) // You don't need to write commas 
-    String.self ~> "Hello, Didi"
-    // ...
+    Int.self ~> 2
+    HTTPClient.self ~> URLSessionHTTPClient(session: .shared)
+    String.self ~> {
+        var result = "Hello"
+        result += ", Didi"
+        return result
+    }
 }
 ```
+
+> [!NOTE]
+> You do not need to write commas within the registration closure
 
 ## Contributing
 
