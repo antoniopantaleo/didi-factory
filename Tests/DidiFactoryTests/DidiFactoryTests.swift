@@ -11,14 +11,10 @@ import DidiFactory
 import FactoryKit
 
 @Suite
-struct DidiFactoryTests: ~Copyable {
-    
-    deinit {
-        FactoryKit.Container.shared.reset(options: .all)
-    }
+struct DidiFactoryTests {
     
     @Test func resolvesRegisteredService() throws {
-        let sut = DidiFactory.FactoryContainer()
+        let sut = makeSUT()
         sut.register {
             Int.self ~> 21
             String.self ~> "hello"
@@ -43,7 +39,7 @@ struct DidiFactoryTests: ~Copyable {
     }
     
     @Test func throwsResolutionErrorWhenServiceMissing() {
-        let sut = DidiFactory.FactoryContainer()
+        let sut = makeSUT()
         
         #expect(throws: ResolutionError<String>.self) {
             _ = try sut.resolve(String.self)
@@ -51,10 +47,15 @@ struct DidiFactoryTests: ~Copyable {
     }
     
     @Test func propertyWrapperWorksThroughAdapter() {
-        let sut = DidiFactory.FactoryContainer()
+        let sut = makeSUT()
         sut.register { Double.self ~> 9.5 }
         
         @Didi.Injected(in: sut) var value: Double?
         #expect(value == 9.5)
+    }
+    
+    private func makeSUT() -> DidiFactory.FactoryContainer {
+        let container = FactoryKit.Container()
+        return DidiFactory.FactoryContainer(container: container)
     }
 }
