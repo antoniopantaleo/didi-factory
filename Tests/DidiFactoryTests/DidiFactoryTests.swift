@@ -54,6 +54,22 @@ struct DidiFactoryTests {
         #expect(value == 9.5)
     }
     
+    @Test func instanceResolutionIsLazy() throws {
+        let sut = makeSUT()
+        nonisolated(unsafe) var accessed = false
+        
+        sut.register {
+            String.self ~> {
+                accessed = true
+                return "Hello DidiFactory"
+            }
+        }
+        
+        #expect(accessed == false)
+        #expect(try sut.resolve(String.self) == "Hello DidiFactory")
+        #expect(accessed == true)
+    }
+    
     private func makeSUT() -> DidiFactory.FactoryContainer {
         let container = FactoryKit.Container()
         return DidiFactory.FactoryContainer(container: container)
